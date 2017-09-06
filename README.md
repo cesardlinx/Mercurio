@@ -1,6 +1,7 @@
-# mercurio NA
+# Mercurio NA
 
 Mercurio 2.0
-Probando esta maravilla !
 
-Mas cambios !
+El objetivo de éste software es gestionar una
+
+test
