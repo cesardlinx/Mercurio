@@ -1,0 +1,12 @@
+.menu_inicio{
+    width: 130px;
+    height: 39px;
+    float: right;
+    background: url('../img/barragris.png') repeat-x;
+}
+
+.ico_space{
+    width: 30px;
+    height: 10px;
+    float: left;
+}
