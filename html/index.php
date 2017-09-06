@@ -8,5 +8,6 @@
 	<h1>Ejemplos CSS</h1>
 	<div>Aqui programando nuevo codigo</div>
 	<p>hasta ahora nada raro :)</p>
+	Si cambio algo, lo pruebo, queda bien entonces grabo y hago CTRL + P para hacer push
 </body>
 </html>
