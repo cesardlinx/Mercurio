@@ -10,5 +10,6 @@
 	<p>hasta ahora nada raro :)</p>
 	Si cambio algo, lo pruebo, queda bien entonces grabo y hago CTRL + P para hacer push
 	<BR>ahora recibo cambio desde el mas allá
+	:D
 </body>
 </html>
