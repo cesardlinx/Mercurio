@@ -1,5 +1,4 @@
 */config/development
-*/config/*
 */logs/log-*.php
 !*/logs/index.html
 */cache/*
@@ -13,8 +12,7 @@ user_guide_src/cilexer/pycilexer.egg-info/*
 
 #codeigniter 3
 application/logs/*
-application/config/config.php
-application/config/database.php
 !application/logs/index.html
 !application/logs/.htaccess
+*/.htaccess
 /vendor/
