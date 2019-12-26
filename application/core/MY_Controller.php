@@ -4,27 +4,34 @@
 
 class MY_Controller extends MX_Controller {
 
-    public function __construct() {
-        parent::__construct();
-        //$this->constantes_model->cargar_datos();
-        //registroAcciones();
-      /* if($this->input->is_ajax_request()) {
-        $this->output->enable_profiler(false);
+  public function __construct() {
+    parent::__construct();
+  }
+
+
+  public function loadTemplate($view, $titulo, $data = array(), $menu='on')
+  {
+    if (isset($_SESSION['conectado'])) {
+          
+      $nombres = $_SESSION['log_usu_nombres'];
+      $nombres_exp = explode(' ', $nombres);
+      $log_nombre = $nombres_exp[0];
+      
+      $datos_cabecera['titulo'] = $titulo;
+      $datos_cabecera['log_nombre'] = $log_nombre;
+      
+      $this->load->view("general/cabecera", $datos_cabecera);
+      if ($menu=='on') {
+        $this->load->view("general/menu");           
+      }
+      $this->load->view($view, $data);
+          
     } else {
-        $this->output->enable_profiler(true);
-    }*/
-}
+      redirect(base_url(),'refresh');
+    } 
+       
+  }
 
-public function loadTemplate($view, $data = array()) {
-    $this->load->view("general/cabecera");
-    $this->load->view($view, $data);
-    $this->load->view("general/pie");
-}
 
-public function cargarPlantilla($view, $data = array()) {
-    $this->load->view("general/encabezado");
-    $this->load->view($view, $data);
-    $this->load->view("comun/firma");
-}
 
 }

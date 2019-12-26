@@ -1,0 +1,360 @@
+html, body {
+	height: 100%;
+}
+
+article {
+	padding: 20px;
+}
+
+aside {
+	padding: 20px;
+	background: #fff;
+}
+
+/*para los textarea*/
+.texto {
+	resize: vertical;
+	max-height: 200px;
+}	
+
+.contenedor-principal {
+	min-height: 100%;
+}
+
+.main {
+	overflow: auto;
+	padding-bottom: 23px;
+}
+
+footer {
+		position: relative;
+		margin-top: -23px;
+		height: 23px;
+    text-align: right;
+    background-color: #2c3e50;
+    color: #fff;
+    font-weight: bold;
+    clear: both;
+}
+
+/*estilos landing page*/
+.suscribirse {
+	padding-left: 50px;
+	padding-right: 50px;
+}
+
+.jumbotron {
+	background: #0F6177;
+	color: #fff;
+}
+
+/*landing page aside*/
+.info {
+	position: relative;
+	bottom: 70px;
+	right: 20px;
+	background: #ecf0f1;
+	-webkit-box-shadow: 2px 2px 20px -1px rgba(0,0,0,0.71);
+	-moz-box-shadow: 2px 2px 20px -1px rgba(0,0,0,0.71);
+	box-shadow: 2px 2px 20px -1px rgba(0,0,0,0.71);
+}
+
+.info-secundaria {
+	margin-bottom: 25px;
+	border-bottom: 1px dashed #fff;
+}
+
+.panel {
+	margin-top: 20px;
+	/*background: #1abc9c;*/
+}
+
+.panel > .mas-info {
+	background: #1BBC9B;
+}
+
+.panel > .mas-info a {
+	color: #fff;
+	text-decoration: none;
+}
+
+.panel > .mas-info a:hover {
+	text-decoration: underline;
+}
+
+
+/*Barra de Navegación*/
+
+.navbar {
+	background: #2c3e50;
+	border-radius: 0;
+	border: none;
+	margin: 0;
+}
+
+.navbar-header .navbar-brand {
+	color: #fff;
+}
+
+.navbar-header .navbar-brand:hover {
+	color: #fff;
+}
+
+.navbar-header .navbar-brand:focus {
+	color: #fff;
+}
+
+
+.navbar .nav li a {
+	color: #fff;
+}
+
+.navbar .nav li a:hover {
+	color: #fff;
+	text-decoration: underline;
+}
+
+.navbar .nav li a:focus {
+	color: #f39c12;
+	text-decoration: underline;
+}
+
+.navbar .navbar-header .icon-bar {
+	background: #fff;
+}
+
+/*botón de búsqueda*/
+.input-group-btn .busqueda {
+	background: #f39c12;
+	border: 1px solid #f39c12;
+}
+
+.input-group-btn .busqueda:hover {
+	background: #f3b552;
+	border: 1px solid #f3b552;
+}
+
+.navbar .navbar-toggle:hover {
+	background: #34495e;
+}
+
+.navbar .navbar-toggle:focus {
+	background: #f39c12;
+}
+
+
+/*Eventos*/
+
+.evento {
+	padding-bottom: 20px;
+	margin-bottom: 20px;
+	border-bottom: 1px solid #999;
+}
+
+.evento .evento-title {
+	margin-top: 0;
+}
+
+.evento .evento-title a {
+	color: #333;
+}
+
+
+.evento .contenedor-botones {
+	width: 100%;
+}
+
+/*Header de Administración*/
+
+header {
+	min-height: 50px;
+	background: #2c3e50;
+	overflow: hidden;
+	margin-bottom: 30px;
+}
+
+/*logo*/
+header .logo {
+	float: left;
+	display: block;
+  height: 50px;
+  padding: 15px 15px;
+  font-size: 20px;
+  line-height: 20px;
+  color: #fff;
+}
+
+
+/*botón de de navegación en dispositivos móviles*/
+header #toggle-menu-adm {
+	display: none;
+	float: left;
+  padding: 9px 10px;
+  margin-top: 9px;
+  margin-left: 15px;
+  background: #2c3e50;
+  border: 1px solid #fff;
+  border-radius: 4px;
+}
+
+/* estilos botón menú*/
+header #toggle-menu-adm .icon-bar {
+  display: block;
+	background: #fff;
+  width: 22px;
+  height: 1px;
+  border-radius: 1px;
+}
+
+header button .icon-bar +.icon-bar {
+	margin-top: 4px;
+}
+
+
+
+header .cerrar-sesion, .bienvenida {
+	float: right;
+	display: block;
+  height: 50px;
+  padding: 15px 15px;
+  font-size: 17px;
+  line-height: 20px;
+  color: #fff;
+}
+
+header .logo:hover {
+	text-decoration: none;
+}
+
+header .bienvenida:hover {
+	text-decoration: none;
+	color: #fff;
+}
+
+/*Menú de administración*/
+
+.menu-adm {
+	background: #0F6177;
+	padding: 0;
+}
+
+.menu-adm ul {
+	list-style-type: none;
+	padding: 0;
+	margin: 0;
+}
+
+.menu-adm ul li a {
+	/*background: #000;*/
+	width: 100%;
+	padding: 15px;
+	display: block;
+	color: #fff;
+	border-bottom: 1px solid #eee;
+	text-decoration: none;
+}
+
+.menu-adm ul li a:hover {
+	background: #256677;
+	color: #fff;
+}
+
+.menu-adm ul li a:active {
+	background: #FC575E;
+	color: #fff;
+}
+
+.menu-adm .active {
+	background: #FC575E;
+	color: #fff;
+}
+
+/*Tabla*/
+.acciones, .ver-mas-2 {
+	width: 15%;
+}
+
+.ver-mas-1 {
+	width: 10%;
+}
+
+.ver-mas-3 {
+	width: 20%;
+}
+
+table {
+	margin-top: 10px;
+}
+
+.icon-event {
+	font-size: 20px;
+}
+
+.btn-evento {
+	padding: 4px 10px;
+}
+
+/*errores para formularios*/
+.error {
+	color: #d9534f;
+}
+
+/*Diseño para dispositivos móviles*/
+
+@media only screen and (max-width: 991px) {
+	header {
+		margin-bottom: 0;
+	}
+
+	header .logo {
+		display: none;
+	}
+	header #toggle-menu-adm {
+		display: block;
+	}
+	
+	.menu-adm {
+		position: absolute;
+		z-index: 5;
+		left: -70%;
+	}
+
+	.breadcrumb {
+		margin-top: 30px;
+	}
+
+
+}
+
+
+@media only screen and (max-width:767px) {
+
+	header a:nth-child(4) {
+		display: none;
+	}
+
+	.ver-mas-3 {
+		width: 30%;
+	}
+	
+	/*para la barra de búsqueda de la portada*/
+	.navbar-right li:first-child form {
+			border: none;
+			margin: 0;			
+	}
+
+	/*para el aside del landing page*/
+	.info {
+		bottom: 0;
+		right: 0;
+	}
+}
+
+@media only screen and (max-width:575px) {
+	.acciones, .ver-mas-1, .ver-mas-2, .ver-mas-3 {
+		width: 15%;
+	}
+	
+
+
+}

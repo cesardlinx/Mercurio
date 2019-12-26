@@ -1,97 +1,142 @@
-$(document).ready(function () {
-    var edad = 0;
-    var edad_et = 0;
-    var edad_c = 0;
-    $("#form_usuarios").validate({
-        errorClass: "my-error-class",
-        rules: {
-            usu_nombres: {required: true, minlength: 3, maxlength: 100},
-            usu_apellidos: {required: true, minlength: 3, maxlength: 100},
-            usu_email: {required: true, minlength: 3, maxlength: 200},
-            usu_contrasena: {required: true, minlength: 3, maxlength: 200},
-        },
-        messages: {
-            usu_nombres: "* Este campo es obligatorio debe tener:mínimo 3 caracteres y máximo 100 caracteres.",
-            usu_apellidos: "* Este campo es obligatorio debe tener:mínimo 3 caracteres y máximo 100 caracteres.",
-            usu_email: "* Este campo es obligatorio debe tener:mínimo 3 caracteres y máximo 200 caracteres.",
-            usu_contrasena: "* Este campo es obligatorio debe tener:mínimo 3 caracteres y máximo 200 caracteres.",
-        },
-    });
-    $("#form_usuarios_mod").validate({
-        errorClass: "my-error-class",
-        rules: {
-            usu_nombres: {required: true, minlength: 3, maxlength: 100},
-            usu_apellidos: {required: true, minlength: 3, maxlength: 100},
-            usu_email: {required: true, minlength: 3, maxlength: 200},
-            usu_genero: {required: true},
-            usu_adm: {required: true},
-        },
-        messages: {
-            usu_nombres: "* Este campo es obligatorio debe tener:mínimo 3 caracteres y máximo 100 caracteres.",
-            usu_apellidos: "* Este campo es obligatorio debe tener:mínimo 3 caracteres y máximo 100 caracteres.",
-            usu_email: "* Este campo es obligatorio debe tener:mínimo 3 caracteres y máximo 200 caracteres.",
-            usu_genero: "* Este campo es obligatorio.",
-            usu_adm: "* Este campo es obligatorio.",
-        },
-    });
-    $("#usu_almacenar").click(function () {
-        $("#form_usuarios").submit();
-    });
-    $("#usu_actualizar").click(function () {
-        $("#form_usuarios_mod").submit();
-    });
-    $("#usu_almacenar_rel").click(function () {
-        $("#form_usuarios_rel").submit();
-    });
+$(document).ready(function(){
 
-    $("a[rel='paginador']").click(function (evento) {
-        evento.preventDefault();
-        var pagina = $(this).attr('href');
-        $("#desde").val(pagina);
-        $("#form_buscar").trigger("submit");
-    });
+	// url base
+  var base_url = $("#base_url").val();
 
 
-    $(".buscar").on("click", function (evento) {
-        evento.preventDefault();
-        $("#form_buscar").trigger("submit");
+	// deshabilitar botones paginación
+	$('.not-active').click(function(e){
+		e.preventDefault();
+	});
+
+	// deshabilita el elemento activo del breadscrumb
+	var breadcrumbActive = $('.breadcrumb .active a').text();
+	$('.breadcrumb .active').empty();
+	$('.breadcrumb .active').text(breadcrumbActive);
+
+		
+	// validación de formularios
+
+	var validator = $("#form-usuarios").validate({
+		rules: {
+      tem_nombre: {
+      	required: true,
+      	minlength:4
+      }
+    },
+    messages: {
+      tem_nombre: {
+      	required: "* Ingrese el nombre del usuario",
+      	minlength: "* El nombre del usuario debe tener mínimo 4 caracteres"
+      }
+    }
+  });
+
+
+	 // chequea si es valido el formulario para enviarlo
+	$('#enviar-usuario').click(function(){
+		if ($("#form-usuarios").valid()) {
+			$('#form-usuarios').trigger('submit');
+		}
+	});
+
+ 	// eliminar usuario
+	$("a[rel='eliminar_usuario']").click(function (event) {
+		event.preventDefault();
+    var id = $(this).attr('val');
+    var res = confirm("¿Seguro desea eliminar?");
+    if (res) {
+
+	    $.ajax({
+	      type: "POST",
+	      url: base_url + "admin/usuarios/eliminar/" + id,
+	      success: function (html) {
+	        window.location = base_url + "admin/usuarios";
+	      }
+	    });
+    }
+  });
+
+	// al mostrarse el modal
+	$('#modal-usuarios').on('show.bs.modal', function (event) {
+
+	  var action = '';
+	  var button = $(event.relatedTarget); 
+	  var modal = $(this);
+	  var id = button.data('id');
+
+	  //llena datos para el modal de actualización
+	  if (id) { 
+
+	  	// obtiene datos del usuario desde el servidor
+	  	$.ajax({
+	      type: "POST",
+	      data: {id: id},
+	      url: base_url+'admin/usuarios/datos_usuario',
+	      dataType: "JSON",
+	      success: function (response) {
+				  modal.find('.modal-body input[name="tem_nombre"]').val(response.tem_nombre);
+				  modal.find('.modal-body textarea[name="tem_descripcion"]').val(response.tem_descripcion);
+	      }
+	    });
+
+
+		  modal.find('.modal-title').text('Editar Usuario'); //cambia titulo al modal
+
+	  	// añade el id a los campos del formulario
+	  	var idInput = '<input type="hidden" name="id" id="id" />';
+		  modal.find('form').append(idInput);
+		  modal.find('.modal-body input[name="id"]').val(id);
+
+		  // action para actualizar 
+		  action = base_url+'admin/usuarios/actualizar';
+		  modal.find('form').attr('action', action);
+
+	  } else { // llena los datos para modal de creación
+
+	  	// cambia el titulo del modal
+	  	modal.find('.modal-title').text('Añadir Nuevo Usuario');
+
+	  	// action para almacenar 
+		  action = base_url+'admin/usuarios/almacenar';
+		  modal.find('form').attr('action', action);
+	  }
+
+
+	})
+
+	// al ocultar modal remover campo oculto y borrar campos
+	$('#modal-usuarios').on('hidden.bs.modal', function () {
+		var modal = $(this);
+		modal.find('.modal-body input[name="id"]').remove();
+
+		// borrado de campos
+		modal.find('.modal-body input[name="tem_nombre"]').val('');
+	  modal.find('.modal-body textarea[name="tem_descripcion"]').val('');
+
+	  // borrado de mensajes de error
+	  validator.resetForm();
+
+	})
+
+
+	// envio de datos para almacenar/actualizar
+	$('#form-usuarios').submit(function(e){
+		e.preventDefault();
+
+	  var uri = $('#form-usuarios').attr('action');
+	  var datos = $('#form-usuarios').serialize();
+
+	  $.ajax({
+      type: "POST",
+      data: datos,
+      url: uri,
+      success: function (html) {
+        window.location = base_url + "admin/usuarios";
+      }
     });
 
-    $("#usu_email").blur(function () {
-        var email = $(this).val();
-        var url = $("#base_url").val();
-        var usu_id = $("#usu_id").val();
-        var deque = $("#deque").val();
-        $.ajax({
-            type: "POST",
-            url: url + "admin/usuarios/buscar_usuario",
-            data: {email: email, usu_id: usu_id, deque: deque},
-            dataType: "html",
-            success: function (data) {
-                if (data != 'no') {
-                    if (deque == 'c')
-                        $('#alert').html("Ya existe este usuario: " + data);
-                    else
-                        $('#alert').html("Ya existe este usuario ");
-                } else
-                $("#alert").html("");
-            }
-        });
-    });
-
-
-    $("#verclave").on("click", function (event) {
-        if ($(this).is(':checked'))
-            $('#usu_contrasena').get(0).type = 'text';
-        else
-            $('#usu_contrasena').get(0).type = 'password';
-    });
-
-
-
+	});
 
 
 });
-
-
-

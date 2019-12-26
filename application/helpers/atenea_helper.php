@@ -606,4 +606,124 @@ function paginador_multiple($sql, $cuantos, $desde) {
                 $pixel = "<img src='" . base_url() . "css/img/rojo.gif' width='7' style='margin:3px' />";
             return $pixel;
         }
-        ?>
+
+        /*paginador para bootstrap*/
+        function paginador_bootstrap($url, $total, $limite, $pagina) {
+            $ci = &get_instance();
+
+            $numero_paginas = ceil($total/$limite);
+
+            $desactivar_flecha_izq = ($pagina == 1) ? "disabled" : "";
+            $desactivar_link_izq = ($pagina == 1) ? "not-active" : "";
+
+            $desactivar_flecha_der = ($pagina == $numero_paginas) ? "disabled" : "";
+            $desactivar_link_der = ($pagina == $numero_paginas) ? "not-active" : "";
+
+            $pagina_anterior = $url.($pagina - 1);
+            $pagina_siguiente = $url.($pagina + 1);
+
+
+            $paginacion = "
+            <nav aria-label='Page navigation'>
+                          <div class='text-center'>
+                            <ul class='pagination'>
+                                <li class=$desactivar_flecha_izq>
+                                <a href=$pagina_anterior aria-label='Previous' class=$desactivar_link_izq>
+                                  <span aria-hidden='true'>&laquo;</span>
+                                </a>
+                              </li>
+            ";
+
+            for ($i=1; $i <= $numero_paginas; $i++) { 
+                $datos_paginador['url'] = $url.$i;
+                $datos_paginador['active'] = ($pagina == $i) ? "active" : "";
+                $datos_paginador['num_pag'] = $i;
+
+                $paginacion .= $ci->parser->parse('templates/paginador_tpl', $datos_paginador ,TRUE);
+            }
+
+            $paginacion .= "
+                      <li class=$desactivar_flecha_der>
+                    <a href=$pagina_siguiente aria-label='Next' class=$desactivar_link_der >
+                      <span aria-hidden='true'>&raquo;</span>
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </nav>
+
+            ";
+
+            return $paginacion;
+        
+        }
+
+        function breadcrumb_bootstrap($principal, $segundo='', $tercero='') {
+            
+            $ci = &get_instance();
+
+            $base_url = base_url();
+            $url_principal = $base_url . $principal;
+
+            $active_principal = '';
+            $active_segundo = '';
+            $active_tercero = '';
+
+
+            if ($segundo == '') {
+                $active_principal = 'active';
+            } elseif ($segundo != '' && $tercero == '') {
+                $active_segundo = 'active';
+            } elseif ($segundo != '' && $tercero != '') {
+                $active_tercero = 'active';
+            }
+
+            $breadcrumb = "
+                <ol class='breadcrumb'>
+                    <li><a href='$base_url'>Inicio</a></li>
+                    <li class='$active_principal'><a href='$url_principal'>".ucfirst($principal)."</a></li>
+            ";
+
+            if ($segundo != '') {
+                $url_segundo = $url_principal.'/'.$segundo;                
+                $breadcrumb .= "<li class='$active_segundo'><a href='$url_segundo'>".ucfirst($segundo)."</a></li>";
+                if ($tercero != '') {
+                    $url_tercero = $url_segundo.'/'.$tercero;                
+                    $breadcrumb .= "<li class='$active_tercero'><a href='$url_tercero'>".ucfirst($tercero)."</a></li>";
+                }
+            }
+
+            $breadcrumb .= "</ol>";
+
+            return $breadcrumb;
+
+        }
+
+
+        function generar_combo($id='', $tabla, $seccion, $campo_principal) {
+
+            $ci =& get_instance();
+
+            $alias = substr($seccion,0,3);
+
+            $html = "<select class='form-control' id='".$alias."_id' name='".$alias."_id'><option value=''>Seleccione</option>";
+                $ci->db->order_by($campo_principal);
+                $query = $ci->db->get($tabla);
+                if ($query->num_rows() > 0) {
+                    foreach ($query->result() as $fila) {
+                        $id_d = $fila->id;
+                        ${$campo_principal} = $fila->{$campo_principal};
+                        if ($id_d == $id)
+                            $selected = "selected";
+                        else
+                            $selected = "";
+                        $html.="<option value='$id_d' $selected>".${$campo_principal}."</option>";
+                    }
+                    return $html . "</select>";
+                } else
+                    return "No hay $seccion ingresados";
+
+                return $html;
+        }
+
+?>

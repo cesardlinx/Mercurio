@@ -1,89 +1,61 @@
 <?php
-
-if (!defined('BASEPATH'))
-    exit('No direct script access allowed');
+defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Temas_model extends CI_Model {
 
-    public function __construct() {
-        parent::__construct();
+	// tabla a usar de la base de datos
+    private static $tabla = 'temas';
+
+
+	public function __construct()
+	{
+		parent::__construct();
+		// $this->load->helper('admin/administracion');
+
+	}
+
+
+    // ------------------------------------------------------------------------
+
+    public function almacenar_mdl($datos) {
+
+        $this->db->insert(self::$tabla, $datos);
     }
 
-    public function index() {
-        $desde = $this->input->post('desde');
-        $w_buscar = $this->input->post('w_buscar');
-        // Cabecera con carga de librerias, modelos o helpers
-        //$this->load->library('parser');
-        // Carga de variables e iniciar variables en blanco
-        if ($desde == "")
-            $desde = 0;
-        $paginado = $html = "";
-        $cuantos = cuantosResultados();
-        if (strlen($w_buscar) > 3) {
-            $sql = "SELECT * FROM `temas` WHERE `tem_nombre` LIKE '$w_buscar' ORDER BY `tem_nombre`";
-        } else {
-            $sql = "SELECT * FROM `temas` ORDER BY `tem_nombre`";
-        }
+    // ------------------------------------------------------------------------
 
-        $paginado = paginador_multiple($sql, $cuantos, $desde);
-        $desde*=$cuantos;
-        $sql_limit = $sql . " limit $desde,$cuantos";
-        $query = $this->db->query($sql_limit);
-        if ($query->num_rows() > 0) {
-            foreach ($query->result() as $fila) {
-                $html .= $this->parser->parse('temas/index_tpl', $fila, TRUE);
-            }
-        } else {
-            $html.= "<tr><td colspan='3'>No hay temas(<strong>$w_buscar</strong>)</td></tr>";
-        }
-        $arreglo["html"] = $html;
-        $arreglo["w_buscar"] = $w_buscar;
-        $arreglo["paginado"] = $paginado;
-        return $arreglo;
-        ;
-    }
-
-    public function almacenar_mdl() {
-        $arreglo = array(
-            "tem_nombre" => $this->input->post('tem_nombre'),
-            "tem_descripcion" => $this->input->post('tem_descripcion'),
-            
-        );
-        $this->db->insert('temas', $arreglo);
-    }
-
-    public function datos_tema() {
-        $id = $this->uri->segment(4);
+    public function obtener_datos($id) {
         $this->db->where("id", $id);
-        $query = $this->db->get('temas');
-        if ($query->num_rows() > 0){
+        $query = $this->db->get(self::$tabla);
+        if ($query->num_rows() > 0) {
             return $query->row_array();
-        }else
+        } else
             return "Sin datos ($id)";
+    }
+
+    // ------------------------------------------------------------------------
+
+    public function actualizar_mdl($id, $datos) {
         
+        $this->db->where('id', $id);
+        $this->db->update(self::$tabla, $datos);
     }
 
-    public function actualizar_mdl() {
-        $id = $this->input->post('id');
-        $arreglo = array(
-            "tem_nombre" => $this->input->post('tem_nombre'),
-            "tem_descripcion" => $this->input->post('tem_descripcion'),
-        );
-        $this->db->where('id', $id);
-        $this->db->update('temas', $arreglo);
-    }
+    // ------------------------------------------------------------------------
 
-    public function eliminar_mdl() {
-        $id = $this->uri->segment(4);
+    public function eliminar_mdl($id) {
         $this->db->where('id', $id);
-        $this->db->delete("temas");
+        $this->db->delete(self::$tabla);
         return true;
     }
 
+    // ------------------------------------------------------------------------
+
+    /*combo box de fechas que pertenecen a un tema*/
     public function combo_temas($id = '') {
         $html = "<select id='tem_id' name='tem_id'><option value=''>Seleccione</option>";
         $this->db->order_by("tem_nombre");
-        $query = $this->db->get('temas');
+        $query = $this->db->get(self::$tabla);
         if ($query->num_rows() > 0) {
             foreach ($query->result() as $fila) {
                 $id_d = $fila->id;
@@ -101,4 +73,50 @@ class Temas_model extends CI_Model {
         return $html;
     }
 
+    // ------------------------------------------------------------------------
+
+    /*temas por página para la paginación*/
+    public function temas_pagina($limit, $offset)
+    {
+        $this->db->order_by('id', 'asc');
+        $this->db->limit($limit, $offset);
+        $query = $this->db->get(self::$tabla);
+
+        return $query->result_array();
+        
+    }
+
+    /*numero total de temas*/
+    public function numero_temas()
+    {
+        $query = $this->db->get(self::$tabla);
+        return $query->num_rows();
+    }
+
+    /*total de la busqueda de temas*/
+    public function total_busqueda_temas ($busqueda)
+    {
+
+        $this->db->like('tem_nombre', $busqueda);
+        $this->db->or_like('tem_descripcion', $busqueda);
+        $query = $this->db->get(self::$tabla);
+
+        return $query->num_rows();
+        
+    }
+
+    /*busqueda de temas por página*/
+    public function buscar_temas_pag($busqueda, $limit, $offset)
+    {
+        $this->db->order_by('id', 'asc');        
+        $this->db->limit($limit, $offset);
+        $this->db->like('tem_nombre', $busqueda);
+        $this->db->or_like('tem_descripcion', $busqueda);
+        $query = $this->db->get(self::$tabla);
+
+        return $query->result_array();
+        
+    }
+
 }
+

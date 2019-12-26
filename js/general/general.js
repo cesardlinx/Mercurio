@@ -8,115 +8,83 @@ $(document).ready(function () {
     }
 
     var base_url = $("#base_url").val();
-    var altoDocumento = $(window).height();
-    var anchoDocumento = $(window).width();
-    var alm_alto_ventana = $("#alm_alto_ventana").val();
 
-    $("#contenedor").height(altoDocumento - 10 - 20);
-    // -110 cabecera y margen y -30 del titulo - 20 área para botones
-    $(".contenido").height(altoDocumento - 23 - 20 - 110 - 30 - 20);
-
-    // enviar el tamaño de la pantalla, para calcular cuantos resultados mostrar
-    if (altoDocumento != alm_alto_ventana)
-        enviarAlto(base_url, altoDocumento);
-
-    $(window).resize(function () {
-        var altoDocumento = $(window).height();
-        enviarAlto(base_url, altoDocumento);
-    });
-
+  
+    // evento que abre y cierra el menú en dispositivos móviles
+    $('#toggle-menu-adm').click(function(){
+      if ($('.menu-adm').hasClass('open')) {
+        cerrarMenu();
+      } else {
+        abrirMenu();
+      }
     
-
-    function enviarAlto(base_url, altoDocumento) {
-        $.ajax({
-            type: "POST",
-            url: base_url + "general/alm_alto_ventana/" + altoDocumento,
-        });
+    });
+  
+    // funciones para abrir y cerrar el menú
+    function abrirMenu() {
+        $('.menu-adm').animate({left: '0'});
+        $('.menu-adm').addClass('open');
     }
-    
-    /* Cargando */
-    $(document).ajaxStart(function () {
-        $("#cargando").css("display", "block");
-    });
-    $(document).ajaxComplete(function () {
-        $("#cargando").css("display", "none");
-    });
 
-    $("#infouser").click(function () {
-        $("#dialoginfo").dialog("open");
-    });
+    function cerrarMenu() {
+        $('.menu-adm').animate({left: '-70%'});
+        $('.menu-adm').removeClass('open');
+                
+    }
 
-    $("#dialoginfo").dialog({
-        autoOpen: false, modal: true, height: 420, width: 640,
-        buttons: {
-            Cerrar: function () {
-                $(this).dialog("close");
-            }
-        },
-        show: {
-            effect: "blind",
-            duration: 500
-        },
-        hide: {
-            effect: "explode",
-            duration: 300
+    // corrige el error de que el menú quede desaparecido
+    var cerrarMenuUnaVez = function() {
+        executed = false;
+        if (!executed) {
+            executed = true;
+            $('.menu-adm').css('left','-70%');
+            $('.menu-adm').removeClass('open'); 
         }
-    });
+      };
 
-    $(".eliminar").click(function () {
-        var res = confirm("¿Seguro desea eliminar?");
-        if (res) {
-            $(this).parent("td").parent("tr").remove();
-            return res;
-        } else
-            return false;
-    });
-
-    /*menu contextual*/
-    //cuando hagamos click, el menú desaparecerá
-    $(document).click(function (e) {
-        if (e.button == 0) {
-            $("#menu_contextual").css("display", "none");
-        }
-    });
-
-    //si pulsamos escape, el menú desaparecerá
-    $(document).keydown(function (e) {
-        if (e.keyCode == 27) {
-            $("#menu_contextual").css("display", "none");
-        }
-    });
-
-    $(".myScroll").mCustomScrollbar({
-        autoHideScrollbar: true,
-        theme: "minimal-dark"
-    });
-
-    // Ayudas 
-    $("#dlg_ayuda").hide();
-    $("body").on("click", "span[rel='ayuda']",function () {
-        var id = $(this).attr('valor');
-        var base_url = $("#base_url").val();
-        $("#dlg_ayuda").dialog({
-            open: function () {
-                $.ajax({
-                    type: "POST",
-                    url: base_url + "admin/ayudas/ver/",
-                    data: {id: id},
-                    success: function (html) {
-                        $("#dlg_ayuda").html(html);
-                    },
-                });
-            }, buttons: {
-                "Cerrar": function () {
-                    $('#dlg_ayuda').dialog('close');
+    $(window).resize(function(){
+        if ($(window).width() > 991) {
+            if (!$('.menu-adm').hasClass('open')) {
+                $('.menu-adm').css('left','0');
+                $('.menu-adm').addClass('open');
+                if (resizedToMobile) {
+                    executed = false;
                 }
-            },
-            modal: true,
-            width: 400,
-            height: 200
-        });
+            }
+        } else {
+            cerrarMenuUnaVez();
+            var resizedToMobile = true;
+        }
     });
-    $("span[rel='ayuda']").css('cursor', 'pointer');
+
+    
+    /*muestra en el menú de administración la opción activa*/
+    var pathArray = window.location.pathname.split( '/' );
+
+    switch(pathArray[3]) {
+        case 'temas':
+           $('#menu-adm-temas').addClass('active'); 
+           break;
+        case 'eventos':
+           $('#menu-adm-eventos').addClass('active'); 
+           break;
+        case 'fechas':
+           $('#menu-adm-fechas').addClass('active'); 
+           break;
+        case 'usuarios':
+           $('#menu-adm-usuarios').addClass('active'); 
+           break;
+        case 'locaciones':
+           $('#menu-adm-locaciones').addClass('active'); 
+           break;
+        case 'servidores':
+           $('#menu-adm-servidores').addClass('active'); 
+           break;
+        case 'suscriptores_bajas':
+           $('#menu-adm-bajas').addClass('active'); 
+           break;
+    }
+
 
 });
+ 
